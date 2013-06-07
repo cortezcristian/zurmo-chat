@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title} 
+    b#userId
+  #single-chat
+  #user-chat
+  p
+    a#link_add Add
+  -if(typeof users!="undefined"){
+    ul#users
+      -users.forEach(function(usr){
+        li
+          a(href=usr.id) #{usr.username}
+      -});
+  -}
+
+  script
+    $(document).ready(function(){
+          /*
+          // to create
+          $("#single-chat").chatbox({
+                                  id : "single-chat",
+                                  title : "Title",
+                                  user : "can be anything"
+                                  offset: 200,
+                                  messageSent: function(id, user, msg){
+                                       alert("DOM " + id + " just typed in " + msg);
+                                  }});
+          // to insert a message
+          $("#single-chat").chatbox("option", "boxManager").addMsg("Mr. Foo", "Barrr!");
+           */
+      });
