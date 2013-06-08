@@ -90,7 +90,10 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('disconnect', function () {
         console.log("Disconnected "+socket.username);
-        connection.query("UPDATE _user SET isonline = 0 WHERE username = ?", [socket.username]);
+        console.log("Sockets in room "+io.sockets.clients(socket.username).length)
+        if(io.sockets.clients(socket.username).length==1){
+            connection.query("UPDATE _user SET isonline = 0 WHERE username = ?", [socket.username]);
+        }
         //to all sockets
 	    io.sockets.emit('logoutUser', socket.username);
     });
