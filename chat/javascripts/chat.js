@@ -18,7 +18,7 @@
  */
 //jQuery(document).ready(function(){
     var port = (window.location.port=="")?":3200":"";
-    var socket = io.connect('http://'+window.location.host+port);
+    var socket = io.connect('http://'+window.location.host+port,{'sync disconnect on unload': true });
 
     //Receive chat
 	socket.on('chatIn', function (username, data) {
@@ -53,11 +53,12 @@
     //user left the site
 	socket.on('logoutUser', function (username) {
 		console.log('logoutUser>>',username);
-        $('ul#users li a').each(function(i,v){
+        /*$('ul#users li a').each(function(i,v){
             if($(v).html()==username){
                 $(this).removeClass('online');    
             }    
-        });
+        });*/
+	    socket.emit('askUserList');
 	}); 
 
     //receive user list

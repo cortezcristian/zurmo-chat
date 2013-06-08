@@ -89,6 +89,9 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function () {
+        console.log("Disconnected "+socket.username);
+        connection.query("UPDATE _user SET isonline = 0 WHERE username = ?", [socket.username]);
+        //to all sockets
 	    io.sockets.emit('logoutUser', socket.username);
     });
 });
