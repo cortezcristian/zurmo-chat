@@ -3,6 +3,9 @@ zurmo-chat
 
 Chat for Zurmo CRM
 
+![Preview](https://raw.github.com/cortezcristian/zurmo-chat/develop/preview/preview2013-06-08.png)
+
+
 # Installation
 
 ### 1. Copy the chat folder
