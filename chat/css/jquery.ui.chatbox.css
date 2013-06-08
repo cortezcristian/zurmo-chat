@@ -53,3 +53,23 @@
     float: left;
     clear: both;
 }
+/* chat list */
+#users li {
+    min-height: 32px;
+}
+
+#users li a {
+    line-height: 32px;
+    padding-left: 20px;
+    display: block;
+}
+
+#users li a:hover {
+    color: black;
+    background-color: #E0E4EE;
+}
+
+#users li h3 {
+    line-height: 32px;
+    padding-left: 20px;
+}

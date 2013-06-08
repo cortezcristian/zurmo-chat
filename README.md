@@ -13,6 +13,9 @@ Chat for Zurmo CRM
 
 File %zurmo-root%/app/protected/modules/zurmo/views/HeaderView.php
 
+          $this->verticalGridView->setView($horizontalGridView, 1, 0);
+    Yii::app()->clientScript->registerCssFile('./chat/css/ui-lightness/jquery-ui-1.8.2.custom.css'); 
+    Yii::app()->clientScript->registerCssFile('./chat/css/jquery.ui.chatbox.css'); 
     Yii::app()->clientScript->registerScriptFile('./chat/javascripts/jquery-ui-1.8.2.custom.min.js'); 
     Yii::app()->clientScript->registerScriptFile('./chat/javascripts/jquery.ui.chatbox.js'); 
     Yii::app()->clientScript->registerScriptFile('./chat/javascripts/chatboxManager.js'); 

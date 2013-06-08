@@ -64,14 +64,16 @@
 		console.log('UserList>>',list, typeof list);
         if($('.AppNavigation #users').size()==0){
             //Create the list
-            $('.AppNavigation').append('<ul id="users"></ul>');
+            $('.AppNavigation').append('<ul id="users"><li><h3>Zurmo Chat</h3></li></ul>');
         }else{
             //Update it
-            $('.AppNavigation #users').empty();
+            $('.AppNavigation #users').empty().append('<li><h3>Zurmo Chat</h3></li>');
         }
-        $(list[0]).each(function(i,v){console.log(v.username)});
+        //$(list[0]).each(function(i,v){console.log(v.username)});
         $(list).each(function(i,v){
-            $('.AppNavigation #users').append("<li><a href='#'>"+v.username+"</a></li>");
+            if(v.username!=superGlobal){
+                $('.AppNavigation #users').append("<li><a href='#'>"+v.username+"</a></li>");
+            }
         });
 	}); 
 
