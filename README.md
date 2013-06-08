@@ -42,4 +42,11 @@ File %zurmo-root%/app/protected/modules/zurmo/views/HeaderView.php
                 ');
 
 
-### 3. Start Node
+### 3. Configure Mysql
+Change the schema of _user
+
+    ALTER TABLE  `_user` ADD  `isonline` TINYINT( 1 ) NOT NULL DEFAULT  '0'
+
+Add the credentials to the config file
+
+### 4. Start Node
