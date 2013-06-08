@@ -3,7 +3,7 @@ zurmo-chat
 
 Chat for Zurmo CRM
 
-![Preview](https://raw.github.com/cortezcristian/zurmo-chat/develop/preview/preview2013-06-08.png)
+![Preview](https://raw.github.com/cortezcristian/zurmo-chat/develop/preview/preview2013-06-08-statuses.png)
 
 
 # Installation
