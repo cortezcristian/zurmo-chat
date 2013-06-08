@@ -13,28 +13,30 @@ Chat for Zurmo CRM
 
 File %zurmo-root%/app/protected/modules/zurmo/views/HeaderView.php
 
-          $this->verticalGridView->setView($horizontalGridView, 1, 0);
-    Yii::app()->clientScript->registerCssFile('./chat/css/ui-lightness/jquery-ui-1.8.2.custom.css'); 
-    Yii::app()->clientScript->registerCssFile('./chat/css/jquery.ui.chatbox.css'); 
-    Yii::app()->clientScript->registerScriptFile('./chat/javascripts/jquery-ui-1.8.2.custom.min.js'); 
-    Yii::app()->clientScript->registerScriptFile('./chat/javascripts/jquery.ui.chatbox.js'); 
-    Yii::app()->clientScript->registerScriptFile('./chat/javascripts/chatboxManager.js'); 
-    Yii::app()->clientScript->registerScriptFile('http://localhost:3200/socket.io/socket.io.js'); 
-    if (Yii::app()->user->loginRequiredAjaxResponse)
-    {
-        Yii::app()->clientScript->registerScript('ajaxLoginRequired', '
-            jQuery("body").ajaxSuccess(
-                function(event, request, options)
-                {
-                    if (request.responseText == "' . Yii::app()->user->loginRequiredAjaxResponse . '")
-                    {
-                        window.location.reload(true);
-                    }
-                }
-            );
-            var superGlobal = "'. Yii::app()->user->userModel->username .'";
-            jQuery.getScript("./chat/javascripts/chat.js");
-        ');
-    }
+            $horizontalGridView = new GridView(1, 1); 
+            $horizontalGridView->setView($globalSearchAndShortcutsCreateMenuView, 0, 0); 
+            $this->verticalGridView->setView($horizontalGridView, 1, 0); 
+            Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/chat/css/ui-lightness/jquery-ui-1.8.2.custom.css'); 
+            Yii::app()->clientScript->registerCssFile(Yii::app()->baseUrl.'/chat/css/jquery.ui.chatbox.css'); 
+            Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/chat/javascripts/jquery-ui-1.8.2.custom.min.js'); 
+            Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/chat/javascripts/jquery.ui.chatbox.js'); 
+            Yii::app()->clientScript->registerScriptFile(Yii::app()->baseUrl.'/chat/javascripts/chatboxManager.js'); 
+            Yii::app()->clientScript->registerScriptFile('http://localhost:3200/socket.io/socket.io.js'); 
+            if (Yii::app()->user->loginRequiredAjaxResponse)
+            {   
+                Yii::app()->clientScript->registerScript('ajaxLoginRequired', '
+                    jQuery("body").ajaxSuccess(
+                        function(event, request, options)
+                        {
+                            if (request.responseText == "' . Yii::app()->user->loginRequiredAjaxResponse . '") 
+                            {
+                                window.location.reload(true);
+                            }
+                        }
+                    );
+                    window.superGlobal = "'. Yii::app()->user->userModel->username .'";
+                    jQuery.getScript("'.Yii::app()->baseUrl.'/chat/javascripts/chat.js");                                                                                 
+                ');
+
 
 ### 3. Start Node
