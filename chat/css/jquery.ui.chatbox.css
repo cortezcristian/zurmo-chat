@@ -64,6 +64,10 @@
     display: block;
 }
 
+#users li a.isonline {
+    background: transparent url(/zurmo/app/chat/css/online.png) 7px 50% no-repeat;
+}
+
 #users li a:hover {
     color: black;
     background-color: #E0E4EE;

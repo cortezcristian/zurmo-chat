@@ -62,6 +62,7 @@ io.sockets.on('connection', function (socket) {
         socket.set('room', room, function() { console.log('room ' + room + ' saved'); } );
         socket.username = room;
         socket.join(room);
+        connection.query("UPDATE _user SET isonline = 1 WHERE username = ?", [socket.username]);
         //to all sockets
 	    io.sockets.emit('joinedUser', socket.username);
     });
@@ -77,7 +78,7 @@ io.sockets.on('connection', function (socket) {
 
     socket.on('askUserList', function(data){
 
-        connection.query('SELECT username from _user', function(err, rows, fields) {
+        connection.query('SELECT username, isonline from _user', function(err, rows, fields) {
           if (err) throw err;
 
           socket.emit('receiveUserList', rows);

@@ -42,16 +42,17 @@
     //new user joins
 	socket.on('joinedUser', function (username) {
 		console.log('joinedUser>>',username);
-        $('ul#users li a').each(function(i,v){
+        /*$('ul#users li a').each(function(i,v){
             if($(v).html()==username){
                 $(this).addClass('online');    
             }    
-        });
+        });*/
+	    socket.emit('askUserList');
 	}); 
 
     //user left the site
 	socket.on('logoutUser', function (username) {
-		console.log('joinedUser>>',username);
+		console.log('logoutUser>>',username);
         $('ul#users li a').each(function(i,v){
             if($(v).html()==username){
                 $(this).removeClass('online');    
@@ -72,7 +73,11 @@
         //$(list[0]).each(function(i,v){console.log(v.username)});
         $(list).each(function(i,v){
             if(v.username!=superGlobal){
-                $('.AppNavigation #users').append("<li><a href='#'>"+v.username+"</a></li>");
+                if(v.isonline==1){
+                    $('.AppNavigation #users').append("<li><a class='isonline' href='#'>"+v.username+"</a></li>");
+                }else{
+                    $('.AppNavigation #users').append("<li><a href='#'>"+v.username+"</a></li>");
+                }
             }
         });
 	}); 
