@@ -5,7 +5,8 @@
         console.log(250*($("div[id*=user-chat-]:visible").size()-1));    
         return 250*($("div[id*=user-chat-]:visible").size()-1);    
     }
-    var closedWin = function(){
+    var closedWin = function(id){
+        //console.log("closed>>>", id);
         //Re arrange windows
         $("div[id*=user-chat-]:visible").each(function(i,v){ //console.log(i,v)
            $(this).chatbox("option", "offset", 250*i)
@@ -19,11 +20,12 @@
 //jQuery(document).ready(function(){
     var port = (window.location.port=="")?":3200":"";
     var socket = io.connect('http://'+window.location.host+port,{'sync disconnect on unload': true });
+    window.chatWindows = [];
 
     //Receive chat
 	socket.on('chatIn', function (username, data) {
 		console.log('chatIn>>',data);
-        $('body').append('<b>'+username + ':</b> ' + data.msg + '<br>');
+        //$('body').append('<b>'+username + ':</b> ' + data.msg + '<br>');
         //$("#single-chat").chatbox("option", "boxManager").addMsg("Mr. Foo", data.msg);
 
         //If the chat window is not open
@@ -33,31 +35,23 @@
             }    
         });
         console.log("++",$("div[id*=user-chat-]:visible").size())
-        var size = ($("div[id*=user-chat-]:visible").size()==1)?0:$("div[id*=user-chat-]:visible").size();
-        $("#user-chat-"+username).chatbox("option", "offset", 250*size)
+        //var size = ($("div[id*=user-chat-]:visible").size()==1)?0:$("div[id*=user-chat-]:visible").size();
+        //$("#user-chat-"+username).chatbox("option", "offset", 250*size)
         $("#user-chat-"+username).chatbox("option", "boxManager").addMsg(username, data.msg);
-
+       
+        // Mark Message as read 
+	    socket.emit('readMsg', data.msgid);
 	}); 
 
     //new user joins
 	socket.on('joinedUser', function (username) {
 		console.log('joinedUser>>',username);
-        /*$('ul#users li a').each(function(i,v){
-            if($(v).html()==username){
-                $(this).addClass('online');    
-            }    
-        });*/
 	    socket.emit('askUserList');
 	}); 
 
     //user left the site
 	socket.on('logoutUser', function (username) {
 		console.log('logoutUser>>',username);
-        /*$('ul#users li a').each(function(i,v){
-            if($(v).html()==username){
-                $(this).removeClass('online');    
-            }    
-        });*/
 	    socket.emit('askUserList');
 	}); 
 
@@ -83,16 +77,39 @@
         });
 	}); 
 
+    //receive open windows
+	socket.on('receiveOpenWindows', function (data) {
+		console.log('receiveOpenWindows>>',data);
+        var listOpen = data.split(',');
+        $('ul#users li a').each(function(i,v){
+            $.each(listOpen, function(j,k){
+                if($(v).html()==k){
+                    $(v).click();    
+                }    
+            });
+        });
+	});
+
+    //receive chat history
+	socket.on('receiveChatHistory', function (username, data) {
+		console.log('receiveChatHistory>>', username, data);
+        $.each(data, function(i,v){
+            $("#user-chat-"+username).chatbox("option", "boxManager").addMsg(v.from, v.message);
+        });
+	});
+
 
     // Join Room
 	socket.emit('joinRoom', superGlobal);
 	socket.emit('askUserList');
+	socket.emit('askOpenWindows');
 	//socket.emit('sendChat', { msg: 'User connected!' });
     $("#userId").html(superGlobal);
 
     //ChatBox Manager
     var counter = 0, idList = new Array();
 
+    /*
       var broadcastMessageCallback = function(from, msg) {
           console.log("broadcast called",from,msg);
           for(var i = 0; i < idList.length; i ++) {
@@ -100,12 +117,12 @@
               $("#" + idList[i]).chatbox("option", "boxManager").addMsg(from, msg);
           }
       }
-
+        */
 
       // chatboxManager is excerpt from the original project
       // the code is not very clean, I just want to reuse it to manage multiple chatboxes
-      chatboxManager.init({messageSent : broadcastMessageCallback});
-
+      //chatboxManager.init({messageSent : broadcastMessageCallback});
+      /*
       $("#link_add").click(function(event, ui) {
           counter ++;
           var id = "box" + counter;
@@ -119,7 +136,7 @@
                                   });
           event.preventDefault();
       });
-
+      */
    
     // Select user to chat with
     $('ul#users li a').live("click",function(e){
@@ -129,13 +146,14 @@
             $("body").append("<div id='user-chat-"+$(this).html()+"'></div>")
             $("body").find("#user-chat-"+$(this).html()).chatbox({
                   user: $(this).html(),
-                  title: 'Chat with '+$(this).html(),
+                  title: $(this).html(),
                   offset: getOffsetWin,
 			      boxClosed : closedWin,
                   messageSent: function(id, user, msg){
 	                socket.emit('sendChat', { msg: msg, user: user});
                     $("#user-chat-"+user).chatbox("option", "boxManager").addMsg(superGlobal, msg);
             }});
+	        socket.emit('askChatHistory', $(this).html());
        }else{
            
            //$(this).chatbox("option", "offset", 250*$("div[id*=user-chat-]:visible").size())
@@ -150,16 +168,15 @@
                $(this).chatbox("option", "offset", 250*i)
             });
        }
+
+	    socket.emit('openWindow', $(this).html());
     });
-    //ChatBox Single
-    /*
-      $("#single-chat").chatbox({
-                  user: 'admin',
-                  title: 'Single Chat',
-                  messageSent: function(id, user, msg){
-	                socket.emit('sendChat', { msg: msg, user: user});
-      }});
-    */
+
+    $('.ui-icon.ui-icon-closethick').live('click', function(e){
+        var userclose = $(this).closest('div').children('span').html();
+	    socket.emit('closeWindow', userclose);
+    });
+
     console.log("ready loaded")
 //});
 
